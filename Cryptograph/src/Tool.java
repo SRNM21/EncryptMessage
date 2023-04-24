@@ -38,20 +38,35 @@ public class Tool extends JFrame
         int x = (int) ((dimension.getWidth() - getWidth()) / 2);
         int y = (int) ((dimension.getHeight() - getHeight()) / 2);
         setLocation(x, y);
-        
+
         final int CENTERED = (int) ((DISPLAY_WIDTH - 300) / 2);
-        final String mode = enc ? "Encryption" : "Decryption";
-        JLabel title = new JLabel(mode, SwingConstants.CENTER);
+        JLabel title = new JLabel(enc ? "Encryption" : "Decyption", SwingConstants.CENTER);
 		title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
         title.setForeground(new Color(63, 63, 63));
         title.setBounds(CENTERED, 0, 300, 60);
 
+        JLabel primaryLabel = new JLabel(enc ? "Message" : "Encrypted Message");
+        primaryLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+        primaryLabel.setForeground(new Color(63, 63, 63));
+        primaryLabel.setBounds(20, 80, 250, 60);
+
+        JTextArea primaryTextArea = new JTextArea(10, 10);  
+        primaryTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+        primaryTextArea.setForeground(new Color(63, 63, 63));
+        primaryTextArea.setLineWrap(true);
+        primaryTextArea.setWrapStyleWord(true);
+
+        JScrollPane scrollTextArea = new JScrollPane(primaryTextArea);
+        scrollTextArea.setBounds(20, 130, (DISPLAY_WIDTH / 2) - 20, 200);
+
+        // test extend
         JButton test = new JButton("extend");
         test.addActionListener(e -> showResult());
         test.setBounds(CENTERED, 100, 200, 200);
 
         panel.add(title);
-        panel.add(test);
+        panel.add(primaryLabel);
+        panel.add(scrollTextArea);
         setVisible(true);
     }
 }
