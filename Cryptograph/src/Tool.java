@@ -1,4 +1,3 @@
-import java.awt.Toolkit;
 
 import java.awt.*;
 import javax.swing.*;
@@ -11,13 +10,15 @@ public class Tool extends JFrame
 
     private void showResult() 
     {
-        setSize(DISPLAY_WIDTH + 300, DISPLAY_HEIGHT);
-        panel.setSize(DISPLAY_WIDTH + 300, DISPLAY_HEIGHT); 
+        final int NEW_DISPLAY_WIDTH = DISPLAY_WIDTH + 300;
+
+        setSize(NEW_DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        panel.setSize(NEW_DISPLAY_WIDTH, DISPLAY_HEIGHT); 
 
         Dimension newDimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int newX = (int) ((newDimension.getWidth() - getWidth()) / 2);
-        int newY = (int) ((newDimension.getHeight() - getHeight()) / 2);
-        setLocation(newX, newY);
+        int x = (int) ((newDimension.getWidth() - getWidth()) / 2);
+        int y = (int) ((newDimension.getHeight() - getHeight()) / 2);
+        setLocation(x, y);
     }
 
     Tool(boolean enc)
@@ -40,7 +41,7 @@ public class Tool extends JFrame
         setLocation(x, y);
 
         final int CENTERED = (int) ((DISPLAY_WIDTH - 300) / 2);
-        JLabel title = new JLabel(enc ? "Encryption" : "Decyption", SwingConstants.CENTER);
+        JLabel title = new JLabel(enc ? "Encryption" : "Decryption", SwingConstants.CENTER);
 		title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
         title.setForeground(new Color(63, 63, 63));
         title.setBounds(CENTERED, 0, 300, 60);
@@ -48,16 +49,32 @@ public class Tool extends JFrame
         JLabel primaryLabel = new JLabel(enc ? "Message" : "Encrypted Message");
         primaryLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
         primaryLabel.setForeground(new Color(63, 63, 63));
-        primaryLabel.setBounds(20, 80, 250, 60);
+        primaryLabel.setBounds(20, 60, 250, 60);
 
-        JTextArea primaryTextArea = new JTextArea(10, 10);  
+        JTextArea primaryTextArea = new JTextArea(5, 10);  
         primaryTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
         primaryTextArea.setForeground(new Color(63, 63, 63));
         primaryTextArea.setLineWrap(true);
         primaryTextArea.setWrapStyleWord(true);
 
-        JScrollPane scrollTextArea = new JScrollPane(primaryTextArea);
-        scrollTextArea.setBounds(20, 130, (DISPLAY_WIDTH / 2) - 20, 200);
+        JScrollPane primaryScrollTextArea = new JScrollPane(primaryTextArea);
+        primaryScrollTextArea.setBounds(20, 110, (DISPLAY_WIDTH / 2) - 40, 450);
+
+        JLabel keyLabel = new JLabel("Key");
+        keyLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+        keyLabel.setForeground(new Color(63, 63, 63));
+        keyLabel.setBounds(DISPLAY_WIDTH / 2 , 60, 250, 60);
+
+        JTextArea keyTextArea = new JTextArea(5, 10);  
+        keyTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+        keyTextArea.setForeground(new Color(63, 63, 63));
+        keyTextArea.setLineWrap(true);
+        keyTextArea.setWrapStyleWord(true);
+
+        JScrollPane KeyScrollTextArea = new JScrollPane(keyTextArea);
+        KeyScrollTextArea.setBounds(DISPLAY_WIDTH / 2 , 110, (DISPLAY_WIDTH / 2) - 40, 200);
+        
+
 
         // test extend
         JButton test = new JButton("extend");
@@ -66,7 +83,9 @@ public class Tool extends JFrame
 
         panel.add(title);
         panel.add(primaryLabel);
-        panel.add(scrollTextArea);
+        panel.add(primaryScrollTextArea);
+        panel.add(keyLabel);
+        panel.add(KeyScrollTextArea);
         setVisible(true);
     }
 }
