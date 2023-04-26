@@ -4,14 +4,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.PlainDocument;
 
 public class Tool extends JFrame
 {
     private static final int DISPLAY_WIDTH = 900;
     private static final int DISPLAY_HEIGHT = 700;
     private static Panel panel = new Panel();
-    private static final int MAX_PRIMARY_TEXT = 500;
-    private static final int MAX_KEY_TEXT = 100;
 
     private void showResult() 
     {
@@ -59,20 +59,18 @@ public class Tool extends JFrame
         JLabel primaryTextCount = new JLabel("Text: 0/500");
         primaryTextCount.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
         primaryTextCount.setForeground(new Color(63, 63, 63));
-        primaryTextCount.setBounds((DISPLAY_WIDTH / 2) - 100, 60, 100, 50);
+        primaryTextCount.setBounds((DISPLAY_WIDTH / 2) - 110, 60, 100, 50);
 
         JTextArea primaryTextArea = new JTextArea(5, 10);  
         primaryTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
         primaryTextArea.setForeground(new Color(63, 63, 63));
         primaryTextArea.setLineWrap(true);
         primaryTextArea.setWrapStyleWord(true);
+        primaryTextArea.setDocument(new LimitedDocument(500));
         primaryTextArea.addKeyListener(new KeyListener() 
         {
             @Override
-            public void keyTyped(KeyEvent e) 
-            {
-                if (primaryTextArea.getText().length() >= MAX_PRIMARY_TEXT) e.consume();;
-            }
+            public void keyTyped(KeyEvent e) {}
 
             @Override
             public void keyPressed(KeyEvent e) {} 
@@ -83,7 +81,7 @@ public class Tool extends JFrame
                 primaryTextCount.setText("Text: " + primaryTextArea.getText().length() + "/500");    
             }
         });
-        
+
         JScrollPane primaryScrollTextArea = new JScrollPane(primaryTextArea);
         primaryScrollTextArea.setBounds(20, 110, (DISPLAY_WIDTH / 2) - 40, 450);
 
@@ -92,23 +90,21 @@ public class Tool extends JFrame
         keyLabel.setForeground(new Color(63, 63, 63));
         keyLabel.setBounds(DISPLAY_WIDTH / 2 , 60, 250, 60);
 
-        JLabel keyTextCount = new JLabel("Text: 0/500");
+        JLabel keyTextCount = new JLabel("Text: 0/100");
         keyTextCount.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
         keyTextCount.setForeground(new Color(63, 63, 63));
-        keyTextCount.setBounds(DISPLAY_WIDTH - 120, 60, 100, 50);
+        keyTextCount.setBounds(DISPLAY_WIDTH - 130, 60, 100, 50);
 
         JTextArea keyTextArea = new JTextArea(5, 10);  
         keyTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
         keyTextArea.setForeground(new Color(63, 63, 63));
         keyTextArea.setLineWrap(true);
         keyTextArea.setWrapStyleWord(true);
+        keyTextArea.setDocument(new LimitedDocument(100));
         keyTextArea.addKeyListener(new KeyListener() 
         {
             @Override
-            public void keyTyped(KeyEvent e) 
-            {
-                if (keyTextArea.getText().length() >= MAX_KEY_TEXT) e.consume();
-            }
+            public void keyTyped(KeyEvent e) {}
 
             @Override
             public void keyPressed(KeyEvent e) {}
@@ -116,7 +112,7 @@ public class Tool extends JFrame
             @Override
             public void keyReleased(KeyEvent e) 
             {     
-                keyTextArea.setText("Text: " + keyTextArea.getText().length() + "/500");    
+                keyTextCount.setText("Text: " + keyTextArea.getText().length() + "/100");    
             }
         });
 
@@ -145,5 +141,24 @@ public class Tool extends JFrame
         panel.add(KeyScrollTextArea);
         panel.add(keyTextCount);
         setVisible(true);
+    }
+}
+
+class LimitedDocument extends PlainDocument 
+{
+    private int maxLength;
+    
+    public LimitedDocument(int maxLength) 
+    {
+        this.maxLength = maxLength;
+    }
+    public void insertString(int offs, String str, javax.swing.text.AttributeSet a) 
+    throws BadLocationException 
+    {
+        int currentLength = getLength();
+        if( currentLength >= maxLength ) return;
+        if( currentLength + str.length() > maxLength ) 
+            str = str.substring(0, maxLength - currentLength);
+        super.insertString(offs, str, a);
     }
 }
