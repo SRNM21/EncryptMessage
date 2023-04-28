@@ -10,11 +10,11 @@ import javax.swing.text.PlainDocument;
 public class Tool extends JFrame
 {
     private static final int DISPLAY_WIDTH = 900;
-    private static final int DISPLAY_HEIGHT = 700;
+    private static final int DISPLAY_HEIGHT = 800;
+    private static JLabel[] KEYSINDICATOR = new JLabel[93];
     private static char[] KEYS = new char[26];
     private static Panel panel = new Panel();
 
-    // extend view
     private void showResult() 
     {
         final int NEW_DISPLAY_WIDTH = DISPLAY_WIDTH + 300;
@@ -54,22 +54,59 @@ public class Tool extends JFrame
         title.setBounds(CENTERED, 0, 300, 60);
 
         JLabel primaryLabel = new JLabel(enc ? "Message" : "Encrypted Message");
-        primaryLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
+        primaryLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
         primaryLabel.setForeground(new Color(63, 63, 63));
-        primaryLabel.setBounds(20, 60, 250, 60);
+        primaryLabel.setBounds(20, 50, 250, 60);
 
-        JLabel primaryTextCount = new JLabel("Text: 0/500");
-        primaryTextCount.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        JLabel primaryTextCount = new JLabel("Text: 0/1000");
+        primaryTextCount.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
         primaryTextCount.setForeground(new Color(63, 63, 63));
-        primaryTextCount.setBounds((DISPLAY_WIDTH / 2) - 110, 60, 100, 50);
+        primaryTextCount.setBounds(DISPLAY_WIDTH - 130 , 50, 120, 50);
 
         JTextArea primaryTextArea = new JTextArea(5, 10);  
-        primaryTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+        primaryTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
         primaryTextArea.setForeground(new Color(63, 63, 63));
         primaryTextArea.setLineWrap(true);
         primaryTextArea.setWrapStyleWord(true);
-        primaryTextArea.setDocument(new LimitedDocument(500));
+        primaryTextArea.setDocument(new LimitedDocument(1000));
         primaryTextArea.addKeyListener(new KeyListener() 
+        {
+            @Override
+            public void keyTyped(KeyEvent e) 
+            {
+                if ((e.getKeyCode() <= 33 && e.getKeyCode() >= 93) && e.getKeyChar() != ' ') e.consume();
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {} 
+
+            @Override
+            public void keyReleased(KeyEvent e) 
+            {     
+                primaryTextCount.setText("Text: " + primaryTextArea.getText().length() + "/1000");    
+            }
+        });
+
+        JScrollPane primaryScrollTextArea = new JScrollPane(primaryTextArea);
+        primaryScrollTextArea.setBounds(20, 100, DISPLAY_WIDTH - 50, (DISPLAY_HEIGHT / 3) - 50);
+
+        JLabel keyLabel = new JLabel("Key");
+        keyLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        keyLabel.setForeground(new Color(63, 63, 63));
+        keyLabel.setBounds(20, 340, 250, 60);
+
+        JLabel keyTextCount = new JLabel("Text: 0/94");
+        keyTextCount.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
+        keyTextCount.setForeground(new Color(63, 63, 63));
+        keyTextCount.setBounds(DISPLAY_WIDTH - 120 , 340, 100, 50);
+
+        JTextArea keyTextArea = new JTextArea(5, 10);  
+        keyTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
+        keyTextArea.setForeground(new Color(63, 63, 63));
+        keyTextArea.setLineWrap(true);
+        keyTextArea.setWrapStyleWord(true);
+        keyTextArea.setDocument(new LimitedDocument(94));
+        keyTextArea.addKeyListener(new KeyListener() 
         {
             @Override
             public void keyTyped(KeyEvent e) 
@@ -83,65 +120,26 @@ public class Tool extends JFrame
             @Override
             public void keyReleased(KeyEvent e) 
             {     
-                primaryTextCount.setText("Text: " + primaryTextArea.getText().length() + "/500");    
+                keyTextCount.setText("Text: " + keyTextArea.getText().length() + "/94");    
             }
         });
 
-        JScrollPane primaryScrollTextArea = new JScrollPane(primaryTextArea);
-        primaryScrollTextArea.setBounds(20, 110, (DISPLAY_WIDTH / 2) - 40, 450);
+        JScrollPane keyScrollTextArea = new JScrollPane(keyTextArea);
+        keyScrollTextArea.setBounds(20, 390, DISPLAY_WIDTH - 50, (DISPLAY_HEIGHT / 3) - 50);
 
-        JLabel keyLabel = new JLabel("Key");
-        keyLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 25));
-        keyLabel.setForeground(new Color(63, 63, 63));
-        keyLabel.setBounds(DISPLAY_WIDTH / 2 , 60, 250, 60);
-
-        JLabel keyTextCount = new JLabel("Text: 0/100");
-        keyTextCount.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
-        keyTextCount.setForeground(new Color(63, 63, 63));
-        keyTextCount.setBounds(DISPLAY_WIDTH - 130, 60, 100, 50);
-
-        // TODO
-        JTextArea keyTextArea = new JTextArea(5, 10);  
-        keyTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
-        keyTextArea.setForeground(new Color(63, 63, 63));
-        keyTextArea.setLineWrap(true);
-        keyTextArea.setWrapStyleWord(true);
-        keyTextArea.setDocument(new LimitedDocument(26));
-        keyTextArea.addKeyListener (new KeyListener() 
-        {
-            @Override
-            public void keyTyped(KeyEvent e) 
-            {
-                if (Character.isDigit(e.getKeyChar()) && e.getKeyChar() != ' ') e.consume();
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {}
-
-            @Override
-            public void keyReleased(KeyEvent e) 
-            {     
-                keyTextCount.setText("Text: " + keyTextArea.getText().length() + "/100");    
-            }
-        });
-
-        JScrollPane KeyScrollTextArea = new JScrollPane(keyTextArea);
-        KeyScrollTextArea.setBounds(DISPLAY_WIDTH / 2 , 110, (DISPLAY_WIDTH / 2) - 40, 200);
-         
-        /*
+        /* 
          * Message must be lowercase english letters and space (' ')
          * Message must not contain any special characters
-         * 
+         * Enter key in a corresponding order
          * Key must be more than 26 lowercase english letters and/or space (' ')
          * Key must not contain any special characters
          * Key must contain every letter in english alphabet('a' to 'z') at least once
          */
 
-        JLabel messageValidation1 = new JLabel("Message must be lowercase english letters and space (' ')");
-        messageValidation1.setIcon(new ImageIcon("Cryptograph/images/NEUTRAL.png"));
-        messageValidation1.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
-        messageValidation1.setForeground(new Color(63, 63, 63));
-        messageValidation1.setBounds(DISPLAY_WIDTH / 2 , 300, 400, 100);
+        JLabel keySyntax = new JLabel("Enter key in a corresponding order: ");
+        keySyntax.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        keySyntax.setForeground(new Color(63, 63, 63));
+        keySyntax.setBounds(25, 590, 270, 60);
 
         // test extend
         JButton test = new JButton("extend");
@@ -153,9 +151,9 @@ public class Tool extends JFrame
         panel.add(primaryScrollTextArea);
         panel.add(primaryTextCount);
         panel.add(keyLabel);
-        panel.add(KeyScrollTextArea);
+        panel.add(keyScrollTextArea);
         panel.add(keyTextCount);
-        panel.add(messageValidation1);
+        panel.add(keySyntax);
         setVisible(true);
     }
 }

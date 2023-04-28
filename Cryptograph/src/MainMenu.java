@@ -51,7 +51,7 @@ public class MainMenu extends JFrame
         title.setBounds(CENTERED, 10, 300, 100);
 
         JButton encryptBtn = new JButton("Encrypt  ", new ImageIcon("Cryptograph/images/EncryptLogo.png"));
-		encryptBtn.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
+		encryptBtn.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 		encryptBtn.setBackground(new Color(246, 246, 246));
 		encryptBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         encryptBtn.setVerticalTextPosition(AbstractButton.CENTER);
@@ -62,7 +62,7 @@ public class MainMenu extends JFrame
         encryptBtn.addActionListener(e -> goToTool(true));
         
         JButton decryptBtn = new JButton("Decrypt  ", new ImageIcon("Cryptograph/images/DecryptLogo.png"));
-		decryptBtn.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 40));
+		decryptBtn.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 		decryptBtn.setBackground(new Color(246, 246, 246));
 		decryptBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         decryptBtn.setVerticalTextPosition(AbstractButton.CENTER);
