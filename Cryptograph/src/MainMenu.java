@@ -19,29 +19,29 @@ public class MainMenu extends JFrame
 
     private void goToTool(boolean enc)
     {
-        dispose();
+        this.dispose();
         new Tool(enc);
     }
 
     MainMenu()
     {
-        setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-        setResizable(false);    
-        setTitle("Message Tool");
-		getContentPane().setLayout(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        setIconImage(Toolkit.getDefaultToolkit().getImage("Cryptograph/images/ICON.png")); 
+        this.setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        this.setResizable(false);    
+        this.setTitle("Message Tool");
+		this.getContentPane().setLayout(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage("Cryptograph/images/ICON.png")); 
 
         Panel panel = new Panel();
 		panel.setBackground(new Color(217, 217, 217));
 		panel.setBounds(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		panel.setLayout(null);
-		getContentPane().add(panel);
+		this.getContentPane().add(panel);
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((dimension.getWidth() - getWidth()) / 2);
-        int y = (int) ((dimension.getHeight() - getHeight()) / 2);
-        setLocation(x, y);
+        int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
+        this.setLocation(x, y);
 
         final int CENTERED = (int) ((DISPLAY_WIDTH - 300) / 2);
 
@@ -75,6 +75,6 @@ public class MainMenu extends JFrame
         panel.add(title); 
         panel.add(encryptBtn); 
         panel.add(decryptBtn); 
-        setVisible(true);
+        this.setVisible(true);
     }
 }

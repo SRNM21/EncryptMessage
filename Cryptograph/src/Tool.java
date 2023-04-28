@@ -19,33 +19,33 @@ public class Tool extends JFrame
     {
         final int NEW_DISPLAY_WIDTH = DISPLAY_WIDTH + 300;
 
-        setSize(NEW_DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        this.setSize(NEW_DISPLAY_WIDTH, DISPLAY_HEIGHT);
         panel.setSize(NEW_DISPLAY_WIDTH, DISPLAY_HEIGHT); 
 
         Dimension newDimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((newDimension.getWidth() - getWidth()) / 2);
-        int y = (int) ((newDimension.getHeight() - getHeight()) / 2);
-        setLocation(x, y);
+        int x = (int) ((newDimension.getWidth() - this.getWidth()) / 2);
+        int y = (int) ((newDimension.getHeight() - this.getHeight()) / 2);
+        this.setLocation(x, y);
     }
 
     Tool(boolean enc)
     {
-        setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-        setResizable(false);    
-        setTitle("Message Tool");
-		getContentPane().setLayout(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        setIconImage(Toolkit.getDefaultToolkit().getImage("Cryptograph/images/ICON.png")); 
+        this.setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+        this.setResizable(false);    
+        this.setTitle("Message Tool");
+		this.getContentPane().setLayout(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage("Cryptograph/images/ICON.png")); 
 
 		panel.setBackground(new Color(217, 217, 217));
 		panel.setBounds(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 		panel.setLayout(null);
-		getContentPane().add(panel);
+		this.getContentPane().add(panel);
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((dimension.getWidth() - getWidth()) / 2);
-        int y = (int) ((dimension.getHeight() - getHeight()) / 2);
-        setLocation(x, y);
+        int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
+        this.setLocation(x, y);
 
         final int CENTERED = (int) ((DISPLAY_WIDTH - 300) / 2);
         JLabel title = new JLabel(enc ? "Encryption" : "Decryption", SwingConstants.CENTER);
@@ -111,7 +111,8 @@ public class Tool extends JFrame
             @Override
             public void keyTyped(KeyEvent e) 
             {
-                if (Character.isDigit(e.getKeyChar()) && e.getKeyChar() != ' ') e.consume();
+                if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_ENTER)
+                    e.consume();
             }
 
             @Override
@@ -136,7 +137,7 @@ public class Tool extends JFrame
          * Key must contain every letter in english alphabet('a' to 'z') at least once
          */
 
-        JLabel keySyntax = new JLabel("Enter key in a corresponding order: ");
+        JLabel keySyntax = new JLabel("Enter key for character (..):");
         keySyntax.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
         keySyntax.setForeground(new Color(63, 63, 63));
         keySyntax.setBounds(25, 590, 270, 60);
@@ -154,7 +155,7 @@ public class Tool extends JFrame
         panel.add(keyScrollTextArea);
         panel.add(keyTextCount);
         panel.add(keySyntax);
-        setVisible(true);
+        this.setVisible(true);
     }
 }
 

@@ -8,5 +8,8 @@ public class test
         //     System.out.print((char) i);
         //     System.out.println(" " + a++);    
         // }    
+
+        System.out.println((char) 11);
+        System.out.println("hello");
     }    
 }
