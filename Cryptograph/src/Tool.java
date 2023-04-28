@@ -11,8 +11,10 @@ public class Tool extends JFrame
 {
     private static final int DISPLAY_WIDTH = 900;
     private static final int DISPLAY_HEIGHT = 700;
+    private static char[] KEYS = new char[26];
     private static Panel panel = new Panel();
 
+    // extend view
     private void showResult() 
     {
         final int NEW_DISPLAY_WIDTH = DISPLAY_WIDTH + 300;
@@ -70,7 +72,10 @@ public class Tool extends JFrame
         primaryTextArea.addKeyListener(new KeyListener() 
         {
             @Override
-            public void keyTyped(KeyEvent e) {}
+            public void keyTyped(KeyEvent e) 
+            {
+                if (Character.isDigit(e.getKeyChar()) && e.getKeyChar() != ' ') e.consume();
+            }
 
             @Override
             public void keyPressed(KeyEvent e) {} 
@@ -95,16 +100,20 @@ public class Tool extends JFrame
         keyTextCount.setForeground(new Color(63, 63, 63));
         keyTextCount.setBounds(DISPLAY_WIDTH - 130, 60, 100, 50);
 
+        // TODO
         JTextArea keyTextArea = new JTextArea(5, 10);  
         keyTextArea.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
         keyTextArea.setForeground(new Color(63, 63, 63));
         keyTextArea.setLineWrap(true);
         keyTextArea.setWrapStyleWord(true);
-        keyTextArea.setDocument(new LimitedDocument(100));
-        keyTextArea.addKeyListener(new KeyListener() 
+        keyTextArea.setDocument(new LimitedDocument(26));
+        keyTextArea.addKeyListener (new KeyListener() 
         {
             @Override
-            public void keyTyped(KeyEvent e) {}
+            public void keyTyped(KeyEvent e) 
+            {
+                if (Character.isDigit(e.getKeyChar()) && e.getKeyChar() != ' ') e.consume();
+            }
 
             @Override
             public void keyPressed(KeyEvent e) {}
@@ -128,6 +137,12 @@ public class Tool extends JFrame
          * Key must contain every letter in english alphabet('a' to 'z') at least once
          */
 
+        JLabel messageValidation1 = new JLabel("Message must be lowercase english letters and space (' ')");
+        messageValidation1.setIcon(new ImageIcon("Cryptograph/images/NEUTRAL.png"));
+        messageValidation1.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        messageValidation1.setForeground(new Color(63, 63, 63));
+        messageValidation1.setBounds(DISPLAY_WIDTH / 2 , 300, 400, 100);
+
         // test extend
         JButton test = new JButton("extend");
         test.addActionListener(e -> showResult());
@@ -140,25 +155,28 @@ public class Tool extends JFrame
         panel.add(keyLabel);
         panel.add(KeyScrollTextArea);
         panel.add(keyTextCount);
+        panel.add(messageValidation1);
         setVisible(true);
     }
 }
 
 class LimitedDocument extends PlainDocument 
 {
-    private int maxLength;
+    private int maxLength; 
     
-    public LimitedDocument(int maxLength) 
+    LimitedDocument(int maxLength) 
     {
         this.maxLength = maxLength;
     }
+
     public void insertString(int offs, String str, javax.swing.text.AttributeSet a) 
     throws BadLocationException 
     {
         int currentLength = getLength();
-        if( currentLength >= maxLength ) return;
-        if( currentLength + str.length() > maxLength ) 
+        if (currentLength >= maxLength) return;
+        if (currentLength + str.length() > maxLength) 
             str = str.substring(0, maxLength - currentLength);
+ 
         super.insertString(offs, str, a);
     }
 }
