@@ -1,5 +1,5 @@
-
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -9,10 +9,11 @@ import javax.swing.text.PlainDocument;
 
 public class Tool extends JFrame
 {
-    private static final int DISPLAY_WIDTH = 900;
+	private static final long serialVersionUID = 1L;
+	private static final int DISPLAY_WIDTH = 900;
     private static final int DISPLAY_HEIGHT = 800;
     private static JLabel[] KEYSINDICATOR = new JLabel[93];
-    private static char[] KEYS = new char[26];
+    private static char[] KEYS = new char[93];
     private static Panel panel = new Panel();
 
     private void showResult() 
@@ -62,6 +63,8 @@ public class Tool extends JFrame
         primaryTextCount.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
         primaryTextCount.setForeground(new Color(63, 63, 63));
         primaryTextCount.setBounds(DISPLAY_WIDTH - 130 , 50, 120, 50);
+        
+        Action doNothing = new AbstractAction() { public void actionPerformed(ActionEvent e) {} };
 
         JTextArea primaryTextArea = new JTextArea(5, 10);  
         primaryTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
@@ -74,7 +77,7 @@ public class Tool extends JFrame
             @Override
             public void keyTyped(KeyEvent e) 
             {
-                if ((e.getKeyCode() <= 33 && e.getKeyCode() >= 93) && e.getKeyChar() != ' ') e.consume();
+                if (e.getKeyCode() <= 32 && e.getKeyCode() >= 93) e.consume();
             }
 
             @Override
@@ -98,7 +101,7 @@ public class Tool extends JFrame
         JLabel keyTextCount = new JLabel("Text: 0/94");
         keyTextCount.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
         keyTextCount.setForeground(new Color(63, 63, 63));
-        keyTextCount.setBounds(DISPLAY_WIDTH - 120 , 340, 100, 50);
+        keyTextCount.setBounds((DISPLAY_WIDTH / 2) - 100, 340, 100, 50);
 
         JTextArea keyTextArea = new JTextArea(5, 10);  
         keyTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
@@ -106,13 +109,14 @@ public class Tool extends JFrame
         keyTextArea.setLineWrap(true);
         keyTextArea.setWrapStyleWord(true);
         keyTextArea.setDocument(new LimitedDocument(94));
+        keyTextArea.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "doNothing");
+        keyTextArea.getActionMap().put("doNothing", doNothing);
         keyTextArea.addKeyListener(new KeyListener() 
         {
             @Override
             public void keyTyped(KeyEvent e) 
             {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyChar() == KeyEvent.VK_ENTER)
-                    e.consume();
+                if ((e.getKeyCode() <= 33 && e.getKeyCode() >= 93) || e.getKeyChar() == ' ') e.consume();
             }
 
             @Override
@@ -126,7 +130,7 @@ public class Tool extends JFrame
         });
 
         JScrollPane keyScrollTextArea = new JScrollPane(keyTextArea);
-        keyScrollTextArea.setBounds(20, 390, DISPLAY_WIDTH - 50, (DISPLAY_HEIGHT / 3) - 50);
+        keyScrollTextArea.setBounds(20, 390, (DISPLAY_WIDTH / 2) - 50, (DISPLAY_HEIGHT / 3) - 50);
 
         /* 
          * Message must be lowercase english letters and space (' ')
@@ -161,7 +165,7 @@ public class Tool extends JFrame
 
 class LimitedDocument extends PlainDocument 
 {
-    private int maxLength; 
+	private int maxLength; 
     
     LimitedDocument(int maxLength) 
     {
