@@ -126,22 +126,16 @@ public class Tool extends JFrame
             @Override
             public void keyTyped(KeyEvent e) 
             {
-                // todo: FIX
                 final char c = e.getKeyChar();
 
                 if (c == KeyEvent.VK_SPACE) e.consume();
                 
-                if ((c >= 33 && c <= 126))
+                if (c >= 33 && c <= 126)
                 {
                     int ci = c - '!';
                     char k = (char) ('!' + keyTextArea.getText().length());
 
-                    if (KEYS[ci] == 0) 
-                    {
-                        KEYS[ci] = k++;
-                        KEYS_INDICATOR[ci].setForeground(Color.GREEN);
-                        System.out.println(Arrays.toString(KEYS));
-                    }   
+                    if (KEYS[ci] == 0) KEYS[ci] = k++;
                 }          
             }
 
