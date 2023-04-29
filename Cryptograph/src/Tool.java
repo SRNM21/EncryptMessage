@@ -12,7 +12,7 @@ public class Tool extends JFrame
 	private static final long serialVersionUID = 1L;
 	private static final int DISPLAY_WIDTH = 900;
     private static final int DISPLAY_HEIGHT = 800;
-    private static JLabel[] KEYSINDICATOR = new JLabel[93];
+    private static JLabel[] KEYS_INDICATOR = new JLabel[94];
     private static char[] KEYS = new char[93];
     private static Panel panel = new Panel();
 
@@ -64,8 +64,6 @@ public class Tool extends JFrame
         primaryTextCount.setForeground(new Color(63, 63, 63));
         primaryTextCount.setBounds(DISPLAY_WIDTH - 130 , 50, 120, 50);
         
-        Action doNothing = new AbstractAction() { public void actionPerformed(ActionEvent e) {} };
-
         JTextArea primaryTextArea = new JTextArea(5, 10);  
         primaryTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
         primaryTextArea.setForeground(new Color(63, 63, 63));
@@ -102,6 +100,8 @@ public class Tool extends JFrame
         keyTextCount.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 14));
         keyTextCount.setForeground(new Color(63, 63, 63));
         keyTextCount.setBounds((DISPLAY_WIDTH / 2) - 100, 340, 100, 50);
+        
+        Action doNothing = new AbstractAction() { public void actionPerformed(ActionEvent e) {} };
 
         JTextArea keyTextArea = new JTextArea(5, 10);  
         keyTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
@@ -145,6 +145,21 @@ public class Tool extends JFrame
         keySyntax.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
         keySyntax.setForeground(new Color(63, 63, 63));
         keySyntax.setBounds(25, 590, 270, 60);
+
+        for (int i = 0, lx = 450, ly = 390; i < 94; i++, lx += 30)
+        {
+            if (lx >= 850) 
+            {
+                ly += 30;
+                lx = 450;
+            }
+
+            KEYS_INDICATOR[i] = new JLabel(String.valueOf((char) (i + 33)));
+            KEYS_INDICATOR[i].setFont(new Font(Font.SANS_SERIF, Font.BOLD, 22));
+            KEYS_INDICATOR[i].setForeground(new Color(63, 63, 63));
+            KEYS_INDICATOR[i].setBounds(lx, ly, 30, 30);
+            panel.add(KEYS_INDICATOR[i]);
+        }
 
         // test extend
         JButton test = new JButton("extend");
