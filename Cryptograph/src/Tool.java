@@ -118,29 +118,31 @@ public class Tool extends JFrame
         keyTextArea.setDocument(new LimitedDocument(94));
         keyTextArea.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "doNothing");
         keyTextArea.getActionMap().put("doNothing", doNothing);
-        
+
         Action deleteAction2 = keyTextArea.getActionMap().get(DefaultEditorKit.deletePrevCharAction);
-        keyTextArea.getActionMap()
-            .put(DefaultEditorKit.deletePrevCharAction, new DeleteActionWrapper(keyTextArea, deleteAction2));
+        keyTextArea.getActionMap().put(DefaultEditorKit.deletePrevCharAction, new DeleteActionWrapper(keyTextArea, deleteAction2));
         keyTextArea.addKeyListener(new KeyListener() 
         {
             @Override
             public void keyTyped(KeyEvent e) 
             {
-                // todo: fix
+                // todo: FIX
                 final char c = e.getKeyChar();
-                int ci = 0;
-                char k = '!';
 
-                if ((c <= 33 && c >= 94) || c == ' ') e.consume();
-                else ci = c - '!';
-
-                if (KEYS[ci] == 0) 
+                if (c == KeyEvent.VK_SPACE) e.consume();
+                
+                if ((c >= 33 && c <= 126))
                 {
-                    KEYS[ci] = k++;
-                    KEYS_INDICATOR[ci].setForeground(Color.GREEN);
-                    System.out.println(Arrays.toString(KEYS));
-                }            
+                    int ci = c - '!';
+                    char k = (char) ('!' + keyTextArea.getText().length());
+
+                    if (KEYS[ci] == 0) 
+                    {
+                        KEYS[ci] = k++;
+                        KEYS_INDICATOR[ci].setForeground(Color.GREEN);
+                        System.out.println(Arrays.toString(KEYS));
+                    }   
+                }          
             }
 
             @Override
@@ -214,7 +216,7 @@ class LimitedDocument extends PlainDocument
     public void insertString(int offs, String str, javax.swing.text.AttributeSet a) 
     throws BadLocationException 
     {
-        int currentLength = getLength();
+        int currentLength = this.getLength();
 
         if (currentLength >= maxLength) return;
 
@@ -239,6 +241,6 @@ class DeleteActionWrapper extends AbstractAction
     @Override
     public void actionPerformed(ActionEvent e)
     { 
-        if (textArea.getCaretPosition() > 0) action.actionPerformed(e);
+        if (textArea.getText().length() > 0) action.actionPerformed(e);
     }
 }
