@@ -1,42 +1,46 @@
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Toolkit;
+
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 public class MainMenu extends JFrame
 {
     private static final int DISPLAY_WIDTH = 450;
     private static final int DISPLAY_HEIGHT = 400;
+    private static final String TITLE = "Message Tool";
+    private static final ImageIcon ICON = new ImageIcon("Cryptograph/images/ICON.png");
 
-    public static void main(String[] args) throws Exception 
+    private void goToConstructor(boolean enc)
     {
+        this.dispose();
+
         SwingUtilities.invokeLater(new Runnable() 
         {
             public void run()
             {
-                new MainMenu();
+                new Constructor(enc);
             } 
         });
     }
 
-    private void goToTool(boolean enc)
-    {
-        this.dispose();
-        new Tool(enc);
-    }
-
     MainMenu()
     {
+        super(TITLE);
         this.setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
         this.setResizable(false);    
-        this.setTitle("Message Tool");
-		this.getContentPane().setLayout(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        this.setIconImage(Toolkit.getDefaultToolkit().getImage("Cryptograph/images/ICON.png")); 
-
-        Panel panel = new Panel();
-		panel.setBackground(new Color(217, 217, 217));
-		panel.setBounds(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
-		panel.setLayout(null);
-		this.getContentPane().add(panel);
+        this.setIconImage(ICON.getImage()); 
+		this.getContentPane().setLayout(null);
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
@@ -50,7 +54,7 @@ public class MainMenu extends JFrame
         title.setForeground(new Color(63, 63, 63));
         title.setBounds(CENTERED, 10, 300, 100);
 
-        JButton encryptBtn = new JButton("Encrypt  ", new ImageIcon("Cryptograph/images/EncryptLogo.png"));
+        JButton encryptBtn = new JButton("Encrypt  ", new ImageIcon("Cryptograph/images/EncryptLogoL.png"));
 		encryptBtn.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 		encryptBtn.setBackground(new Color(246, 246, 246));
 		encryptBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -59,9 +63,9 @@ public class MainMenu extends JFrame
         encryptBtn.setFocusPainted(false);
 		encryptBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		encryptBtn.setBounds(CENTERED, 130, 300, 80);
-        encryptBtn.addActionListener(e -> goToTool(true));
+        encryptBtn.addActionListener(e -> goToConstructor(true));
         
-        JButton decryptBtn = new JButton("Decrypt  ", new ImageIcon("Cryptograph/images/DecryptLogo.png"));
+        JButton decryptBtn = new JButton("Decrypt  ", new ImageIcon("Cryptograph/images/DecryptLogoL.png"));
 		decryptBtn.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 40));
 		decryptBtn.setBackground(new Color(246, 246, 246));
 		decryptBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -70,11 +74,11 @@ public class MainMenu extends JFrame
         decryptBtn.setFocusPainted(false);
 		decryptBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		decryptBtn.setBounds(CENTERED, 230, 300, 80);
-        decryptBtn.addActionListener(e -> goToTool(false));
+        decryptBtn.addActionListener(e -> goToConstructor(false));
 
-        panel.add(title); 
-        panel.add(encryptBtn); 
-        panel.add(decryptBtn); 
+        this.add(title); 
+        this.add(encryptBtn); 
+        this.add(decryptBtn); 
         this.setVisible(true);
     }
 }
