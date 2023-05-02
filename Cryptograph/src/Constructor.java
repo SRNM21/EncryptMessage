@@ -13,10 +13,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -41,6 +43,42 @@ public class Constructor extends JFrame
         int x = (int) ((newDimension.getWidth() - this.getWidth()) / 2);
         int y = (int) ((newDimension.getHeight() - this.getHeight()) / 2);
         this.setLocation(x, y);
+    }
+
+    private void goToHome()
+    {
+        int a = JOptionPane.showConfirmDialog(this, "Are you sure?", TITLE, JOptionPane.YES_NO_OPTION);
+
+        if (a == JOptionPane.YES_OPTION)
+        {
+            this.dispose();
+            SwingUtilities.invokeLater(MainMenu::new);
+        }
+    }
+
+    private void construct(String message, String key)
+    {
+        Validate validate = new Validate();
+
+        MessageValidation validMessage = validate.isValidMessage(message);
+        KeyValidation validKey = validate.isValidKey(key);
+
+        final String M1 = "Message is Empty";
+        final String M2 = "Message contains unkown characters";
+        
+        switch(validMessage)
+        {
+            case NullMessage -> JOptionPane.showMessageDialog(this, M1 ,TITLE, JOptionPane.WARNING_MESSAGE);     
+            case InvalidUnicode -> JOptionPane.showMessageDialog(this, M2, TITLE, JOptionPane.WARNING_MESSAGE);     
+            case ValidMessage -> showResult();
+        }
+
+        switch(validKey)
+        {
+            case InsufficientCipherKey: 
+            case InvalidUnicode:
+            case ValidKey:
+        }
     }
 
     Constructor(boolean enc)
@@ -132,7 +170,7 @@ public class Constructor extends JFrame
             { 
                 update(keyTextArea, keyTextCount, 200); 
             }
-  
+
             @Override
             public void removeUpdate(DocumentEvent e) 
             { 
@@ -142,7 +180,7 @@ public class Constructor extends JFrame
                     if (!checkKey(c))
                         KEYS_INDICATOR[c - '!'].setForeground(new Color(63, 63, 63));
             }
-            
+
             @Override
             public void insertUpdate(DocumentEvent e) 
             { 
@@ -191,8 +229,19 @@ public class Constructor extends JFrame
             KEYS_INDICATOR[i].setBounds(lx, ly, 30, 30);
             this.add(KEYS_INDICATOR[i]);
         }
-
+        
         final int BTN_POS = (int) ((DISPLAY_WIDTH - 100) / 2);
+        JButton HometBtn = new JButton("Home ", new ImageIcon("Cryptograph/images/Home.png"));
+		HometBtn.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
+		HometBtn.setBackground(new Color(246, 246, 246));
+		HometBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        HometBtn.setVerticalTextPosition(AbstractButton.CENTER);
+        HometBtn.setHorizontalTextPosition(AbstractButton.LEADING);  
+        HometBtn.setFocusPainted(false);
+		HometBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		HometBtn.setBounds(BTN_POS - 60, 590, 100, 40);
+        HometBtn.addActionListener(e -> goToHome());
+
         JButton getResultBtn = new JButton("Encrypt ", new ImageIcon("Cryptograph/images/EncryptLogoS.png"));
 		getResultBtn.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
 		getResultBtn.setBackground(new Color(246, 246, 246));
@@ -201,13 +250,8 @@ public class Constructor extends JFrame
         getResultBtn.setHorizontalTextPosition(AbstractButton.LEADING);  
         getResultBtn.setFocusPainted(false);
 		getResultBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		getResultBtn.setBounds(BTN_POS, 590, 100, 40);
-        //getResultBtn.addActionListener(e -> goToConstructor(true));
-
-        // test extend
-        JButton test = new JButton("extend");
-        test.addActionListener(e -> showResult());
-        test.setBounds((int) ((DISPLAY_WIDTH - 300) / 2), 100, 200, 200);
+		getResultBtn.setBounds(BTN_POS + 60, 590, 100, 40);
+        getResultBtn.addActionListener(e -> construct(primaryTextArea.getText(), keyTextArea.getText()));
 
         this.add(title);
         this.add(primaryLabel);
@@ -216,6 +260,7 @@ public class Constructor extends JFrame
         this.add(keyLabel);
         this.add(keyScrollTextArea);
         this.add(keyTextCount);
+        this.add(HometBtn);
         this.add(getResultBtn);
     
         this.setVisible(true);
