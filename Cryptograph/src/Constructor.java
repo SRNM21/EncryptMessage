@@ -4,6 +4,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
@@ -32,22 +34,24 @@ public class Constructor extends JFrame
     private static final String TITLE = "Message Tool";
     private static final ImageIcon ICON = new ImageIcon("Cryptograph/images/ICON.png");
     private static JLabel[] KEYS_INDICATOR = new JLabel[94];
+    static boolean ENC_MODE;
 
-    private void showResult() 
+    private void showResult(boolean encMode) 
     {
-        final int NEW_DISPLAY_WIDTH = DISPLAY_WIDTH + 300;
+        String m = encMode ? "Encrypt Message?" : "Decrypt Message?";
+        int a = JOptionPane.showConfirmDialog(this, m, TITLE, JOptionPane.YES_NO_OPTION);
 
-        this.setSize(NEW_DISPLAY_WIDTH, DISPLAY_HEIGHT);
-
-        Dimension newDimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((newDimension.getWidth() - this.getWidth()) / 2);
-        int y = (int) ((newDimension.getHeight() - this.getHeight()) / 2);
-        this.setLocation(x, y);
+        if (a == JOptionPane.YES_OPTION)
+        {
+            this.dispose();
+            SwingUtilities.invokeLater(Cryptograph::new);
+        }
     }
 
     private void goToHome()
     {
-        int a = JOptionPane.showConfirmDialog(this, "Are you sure?", TITLE, JOptionPane.YES_NO_OPTION);
+        String m = "Are you sure?";
+        int a = JOptionPane.showConfirmDialog(this, m, TITLE, JOptionPane.YES_NO_OPTION);
 
         if (a == JOptionPane.YES_OPTION)
         {
@@ -63,21 +67,23 @@ public class Constructor extends JFrame
         MessageValidation validMessage = validate.isValidMessage(message);
         KeyValidation validKey = validate.isValidKey(key);
 
-        final String M1 = "Message is Empty";
-        final String M2 = "Message contains unkown characters";
-        
+        final String NM = "Message is Empty";
+        final String IU = "Message contains unkown characters";
+        final String IC = "Key must contain every english letters and special characters";
+
         switch(validMessage)
         {
-            case NullMessage -> JOptionPane.showMessageDialog(this, M1 ,TITLE, JOptionPane.WARNING_MESSAGE);     
-            case InvalidUnicode -> JOptionPane.showMessageDialog(this, M2, TITLE, JOptionPane.WARNING_MESSAGE);     
-            case ValidMessage -> showResult();
-        }
-
-        switch(validKey)
-        {
-            case InsufficientCipherKey: 
-            case InvalidUnicode:
-            case ValidKey:
+            case NullMessage    -> JOptionPane.showMessageDialog(this, NM ,TITLE, JOptionPane.WARNING_MESSAGE);
+            case InvalidUnicode -> JOptionPane.showMessageDialog(this, IU, TITLE, JOptionPane.WARNING_MESSAGE); 
+            case ValidMessage   -> 
+            {
+                switch(validKey)
+                {
+                    case InsufficientCipherKey  -> JOptionPane.showMessageDialog(this, IC ,TITLE, JOptionPane.WARNING_MESSAGE);     
+                    case InvalidUnicode         -> JOptionPane.showMessageDialog(this, IU, TITLE, JOptionPane.WARNING_MESSAGE);     
+                    case ValidKey               -> showResult(ENC_MODE);
+                }
+            }
         }
     }
 
@@ -89,6 +95,7 @@ public class Constructor extends JFrame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         this.setIconImage(ICON.getImage()); 
 		this.getContentPane().setLayout(null);
+        ENC_MODE = enc;
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
@@ -138,8 +145,17 @@ public class Constructor extends JFrame
         });
         
         Action deleteAction1 = primaryTextArea.getActionMap().get(DefaultEditorKit.deletePrevCharAction);
-        primaryTextArea.getActionMap().put(DefaultEditorKit.deletePrevCharAction, new DeleteActionWrapper(primaryTextArea, deleteAction1));
-        
+        primaryTextArea.getActionMap()
+            .put(DefaultEditorKit.deletePrevCharAction, new DeleteActionWrapper(primaryTextArea, deleteAction1));
+        primaryTextArea.addKeyListener(new KeyAdapter() 
+        {
+            public void keyTyped(KeyEvent e) 
+            {
+                char c = e.getKeyChar();
+                if (c < 32 || c > 126) e.consume();    	
+            }
+        }); 
+
         JScrollPane primaryScrollTextArea = new JScrollPane(primaryTextArea);
         primaryScrollTextArea.setBounds(20, 100, DISPLAY_WIDTH - 50, (DISPLAY_HEIGHT / 3) - 50);
         
@@ -162,7 +178,7 @@ public class Constructor extends JFrame
         keyTextArea.setWrapStyleWord(true);
         keyTextArea.setDocument(new LimitedDocument(200));
         keyTextArea.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "doNothing");
-        keyTextArea.getActionMap().put("doNothing", doNothing);
+        keyTextArea.getActionMap().put("doNbothing", doNothing);
         keyTextArea.getDocument().addDocumentListener(new DocumentListener() 
         {
             @Override
@@ -185,20 +201,10 @@ public class Constructor extends JFrame
             public void insertUpdate(DocumentEvent e) 
             { 
                 update(keyTextArea, keyTextCount, 200);
-
-                try
-                {
-                    char c = e.getDocument()
-                        .getText(e.getOffset(), e.getLength())
-                        .charAt(0);
                 
-                    if (c >= 33 && c <= 126) 
-                        KEYS_INDICATOR[c - '!'].setForeground(Color.GREEN);
-                } 
-                catch (BadLocationException e1)
-                {
-                    e1.printStackTrace();
-                }
+                for (char c = '!'; c <= '~'; c++)
+                    if (checkKey(c))
+                        KEYS_INDICATOR[c - '!'].setForeground(Color.GREEN);  
             }
 
             public boolean checkKey(char key) 
@@ -210,7 +216,16 @@ public class Constructor extends JFrame
         });
 
         Action deleteAction2 = keyTextArea.getActionMap().get(DefaultEditorKit.deletePrevCharAction);
-        keyTextArea.getActionMap().put(DefaultEditorKit.deletePrevCharAction, new DeleteActionWrapper(keyTextArea, deleteAction2));
+        keyTextArea.getActionMap()
+            .put(DefaultEditorKit.deletePrevCharAction, new DeleteActionWrapper(keyTextArea, deleteAction2));
+        keyTextArea.addKeyListener(new KeyAdapter() 
+        {
+            public void keyTyped(KeyEvent e) 
+            {
+                char c = e.getKeyChar();
+                if (c < 32 || c > 126) e.consume();    	
+            }
+        }); 
 
         JScrollPane keyScrollTextArea = new JScrollPane(keyTextArea);
         keyScrollTextArea.setBounds(20, 340, (DISPLAY_WIDTH / 2) - 50, (DISPLAY_HEIGHT / 3) - 20);
@@ -242,7 +257,12 @@ public class Constructor extends JFrame
 		HometBtn.setBounds(BTN_POS - 60, 590, 100, 40);
         HometBtn.addActionListener(e -> goToHome());
 
-        JButton getResultBtn = new JButton("Encrypt ", new ImageIcon("Cryptograph/images/EncryptLogoS.png"));
+        String resultBtnText = enc ? "Encrypt " : "Decrypt ";
+        ImageIcon resultBtnIcon = enc ? 
+            new ImageIcon("Cryptograph/images/EncryptLogoS.png") : 
+            new ImageIcon("Cryptograph/images/DecryptLogoS.png");
+
+        JButton getResultBtn = new JButton(resultBtnText, resultBtnIcon);
 		getResultBtn.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
 		getResultBtn.setBackground(new Color(246, 246, 246));
 		getResultBtn.setBorder(BorderFactory.createLineBorder(Color.BLACK));
