@@ -336,6 +336,6 @@ class DeleteActionWrapper extends AbstractAction
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        if (textArea.getText().length() > 0) action.actionPerformed(e);
+        if (textArea.getText().length() > 0)  action.actionPerformed(e);
     }
 }
