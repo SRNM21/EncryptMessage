@@ -25,7 +25,6 @@ public class Cryptograph extends JFrame
     private static final int DISPLAY_HEIGHT = 600;
     private static final String TITLE = "Message Tool";
     private static final ImageIcon ICON = new ImageIcon("Cryptograph/images/ICON.png");
-    static boolean RES_MODE = Constructor.ENC_MODE;
 
     private void goToHome()
     {
@@ -38,8 +37,48 @@ public class Cryptograph extends JFrame
             SwingUtilities.invokeLater(MainMenu::new);
         }
     }
-    
-    Cryptograph()
+
+    private String encrypt(String message, String key) 
+    {   
+        StringBuilder sb = new StringBuilder();
+        char[] keyLet = new char[94];
+        char charInd = '!';
+
+        for (final char c : key.toCharArray())
+            if (c != ' ' && keyLet[c - '!'] == 0) 
+                keyLet[c - '!'] = charInd++;
+
+        for (final char c : message.toCharArray()) 
+        {
+            if (c == ' ') sb.append(c);
+            else sb.append(keyLet[c - '!']); 
+        }
+
+        return sb.toString();
+    }
+
+    private String decrypt(String message, String key) 
+    {   
+        StringBuilder sb = new StringBuilder();
+        char[] keyLet = new char[94];
+        char charInd = '!';
+
+        for (final char c : key.toCharArray())
+            if (c != ' ' && keyLet[c - '!'] == 0) 
+                keyLet[c - '!'] = charInd++;
+
+        for (final char c : message.toCharArray()) 
+        {
+            String keyString = String.valueOf(keyLet);
+
+            if (c == ' ') sb.append(c);
+            else sb.append((char) (keyString.indexOf(c) + '!'));
+        }
+        
+        return sb.toString();
+    }
+
+    Cryptograph(boolean encMode, String message, String key)
     {
         super(TITLE);
         this.setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
@@ -53,7 +92,7 @@ public class Cryptograph extends JFrame
         int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
         this.setLocation(x, y);
 
-        JLabel resultLabel = new JLabel(RES_MODE ? "Decrypted Message" : "Encrypted Message");
+        JLabel resultLabel = new JLabel(encMode ? "Encrypted Message" : "Decrypted Message");
         resultLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
         resultLabel.setForeground(new Color(63, 63, 63));
         resultLabel.setBounds(20, 10, 250, 50);
@@ -64,6 +103,7 @@ public class Cryptograph extends JFrame
         resultText.setLineWrap(true);
         resultText.setWrapStyleWord(true);
         resultText.setEditable(false);
+        resultText.setText(encMode ? encrypt(message, key) : decrypt(message, key));
 
         JScrollPane scrollResultText = new JScrollPane(resultText);
         scrollResultText.setBounds(20, 70, DISPLAY_WIDTH - 50, DISPLAY_HEIGHT - 200);
@@ -103,7 +143,7 @@ public class Cryptograph extends JFrame
         });
 
         this.add(resultLabel);
-        this.add(scrollResultText);
+        this.add(scrollResultText); 
         this.add(HometBtn);
         this.add(copyBtn);
         this.setVisible(true);
@@ -128,7 +168,7 @@ class Validate
     {   
         if (key.length() < 26) 
             return KeyValidation.InsufficientCipherKey;
-        
+
         for (char c : key.toCharArray()) 
             if (c < 32 || c > 126)
                 return KeyValidation.InvalidUnicode;

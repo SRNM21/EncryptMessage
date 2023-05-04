@@ -36,7 +36,7 @@ public class Constructor extends JFrame
     private static JLabel[] KEYS_INDICATOR = new JLabel[94];
     static boolean ENC_MODE;
 
-    private void showResult(boolean encMode) 
+    private void showResult(boolean encMode, String message, String key) 
     {
         String m = encMode ? "Encrypt Message?" : "Decrypt Message?";
         int a = JOptionPane.showConfirmDialog(this, m, TITLE, JOptionPane.YES_NO_OPTION);
@@ -44,7 +44,14 @@ public class Constructor extends JFrame
         if (a == JOptionPane.YES_OPTION)
         {
             this.dispose();
-            SwingUtilities.invokeLater(Cryptograph::new);
+
+            SwingUtilities.invokeLater(new Runnable() 
+            {
+                public void run()
+                {
+                    new Cryptograph(ENC_MODE, message, key);
+                } 
+            });
         }
     }
 
@@ -81,7 +88,7 @@ public class Constructor extends JFrame
                 {
                     case InsufficientCipherKey  -> JOptionPane.showMessageDialog(this, IC ,TITLE, JOptionPane.WARNING_MESSAGE);     
                     case InvalidUnicode         -> JOptionPane.showMessageDialog(this, IU, TITLE, JOptionPane.WARNING_MESSAGE);     
-                    case ValidKey               -> showResult(ENC_MODE);
+                    case ValidKey               -> showResult(ENC_MODE, message, key);
                 }
             }
         }
@@ -229,7 +236,7 @@ public class Constructor extends JFrame
 
         JScrollPane keyScrollTextArea = new JScrollPane(keyTextArea);
         keyScrollTextArea.setBounds(20, 340, (DISPLAY_WIDTH / 2) - 50, (DISPLAY_HEIGHT / 3) - 20);
-        
+
         for (int i = 0, lx = 450, ly = 300; i < 94; i++, lx += 32)
         {
             if (lx >= 850) 
@@ -244,7 +251,7 @@ public class Constructor extends JFrame
             KEYS_INDICATOR[i].setBounds(lx, ly, 30, 30);
             this.add(KEYS_INDICATOR[i]);
         }
-        
+
         final int BTN_POS = (int) ((DISPLAY_WIDTH - 100) / 2);
         JButton HometBtn = new JButton("Home ", new ImageIcon("Cryptograph/images/Home.png"));
 		HometBtn.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
@@ -282,7 +289,7 @@ public class Constructor extends JFrame
         this.add(keyTextCount);
         this.add(HometBtn);
         this.add(getResultBtn);
-    
+
         this.setVisible(true);
     }
 
