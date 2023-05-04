@@ -1,18 +1,27 @@
-## Getting Started
+## CRYPTOGRAPH TOOL
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+This tool is inspired on LeetCode Problem [2325. Decode the Message](https://leetcode.com/problems/decode-the-message/description/).
 
-## Folder Structure
+### How To Use
 
-The workspace contains two folders by default, where:
+#### Encrption Mode:
+**Message**
+- Message that you want to encrypt
+- Message must only contain characters with uncode **32 > x > 126**
+- Message characters is mamximum of 1000
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+**Key**
+- key must contain all charaters from unicode **32** to **126**
+- key does not allow new line
+- key characters is mamximum of 200
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+#### Decryption Mode:
+**Encrypted Message**
+- Enrypted Message that you want to decrypt
+- Enrypted Message must only contain characters with uncode **32 > x > 126**
+- Enrypted Message characters is mamximum of 1000
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+**Key**
+- key must contain all charaters from unicode **32** to **126**
+- key does not allow new line
+- key characters is mamximum of 200
