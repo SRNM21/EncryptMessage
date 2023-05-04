@@ -50,7 +50,7 @@ public class Cryptograph extends JFrame
 
         for (final char c : message.toCharArray()) 
         {
-            if (c == ' ') sb.append(c);
+            if (c == ' ' || c == '\n') sb.append(c);
             else sb.append(keyLet[c - '!']); 
         }
 
@@ -71,7 +71,7 @@ public class Cryptograph extends JFrame
         {
             String keyString = String.valueOf(keyLet);
 
-            if (c == ' ') sb.append(c);
+            if (c == ' ' || c == '\n') sb.append(c);
             else sb.append((char) (keyString.indexOf(c) + '!'));
         }
         
@@ -98,7 +98,7 @@ public class Cryptograph extends JFrame
         resultLabel.setBounds(20, 10, 250, 50);
 
         JTextArea resultText = new JTextArea(5, 10); 
-        resultText.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
+        resultText.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
         resultText.setForeground(new Color(63, 63, 63));
         resultText.setLineWrap(true);
         resultText.setWrapStyleWord(true);
@@ -158,7 +158,7 @@ class Validate
             return MessageValidation.NullMessage;
 
         for (char c : message.toCharArray()) 
-            if (c < 32 || c > 126)
+            if ((c < 32 || c > 126) && c != '\n')
                 return MessageValidation.InvalidUnicode;
 
         return MessageValidation.ValidMessage;

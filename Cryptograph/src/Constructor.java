@@ -125,7 +125,7 @@ public class Constructor extends JFrame
         primaryTextCount.setBounds(DISPLAY_WIDTH - 140 , 50, 110, 50);
         
         JTextArea primaryTextArea = new JTextArea(5, 10); 
-        primaryTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
+        primaryTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
         primaryTextArea.setForeground(new Color(63, 63, 63));
         primaryTextArea.setLineWrap(true);
         primaryTextArea.setWrapStyleWord(true);
@@ -179,7 +179,7 @@ public class Constructor extends JFrame
         Action doNothing = new AbstractAction() { public void actionPerformed(ActionEvent e) {} };
 
         JTextArea keyTextArea = new JTextArea(5, 10); 
-        keyTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
+        keyTextArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
         keyTextArea.setForeground(new Color(63, 63, 63));
         keyTextArea.setLineWrap(true);
         keyTextArea.setWrapStyleWord(true);
